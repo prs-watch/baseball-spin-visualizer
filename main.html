@@ -1,0 +1,82 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/99/three.min.js"></script>
+    <script>
+        // initialize.
+        window.addEventListener('load', init);
+        function init() {
+            renderSpin(0, 0, 10);
+        }
+
+        // fire when button is clicked.
+        function handleOnClick() {
+            const spindir = document.getElementById("spindir").value;
+            const grip = document.getElementById("grip").value;
+            const spinrate = document.getElementById("spinrate").value;
+            renderSpin(spindir, grip, spinrate);
+        }
+
+        // render function.
+        function renderSpin(spindir, grip, spinrate) {
+            const width = 712;
+            const height = 397;
+
+            const renderer = new THREE.WebGLRenderer({
+                canvas: document.querySelector('#pitch')
+            });
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setSize(width, height);
+
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(45, width / height);
+            camera.position.set(0, 0, +1000);
+            camera.rotation.order = "XYZ";
+            // spin dir
+            camera.rotation.z = (spindir * Math.PI) / 180;
+
+            const textureColor = new THREE.TextureLoader().load('images/SoftballColor.jpg')
+            const textureBump = new THREE.TextureLoader().load('images/SoftballBump.jpg')
+            const geometry = new THREE.SphereGeometry(300, 300, 300);
+            const material = new THREE.MeshPhongMaterial(
+                {
+                    map: textureColor,
+                    bumpMap: textureBump,
+                    bumpScale: 0.01,
+                }
+            );
+            const sphere = new THREE.Mesh(geometry, material);
+            // grip
+            sphere.rotation.z = (grip * Math.PI) / 180;
+            scene.add(sphere);
+
+            const light = new THREE.DirectionalLight(0xffffff);
+            light.position.set(0, 1, 1).normalize();
+            scene.add(light);
+
+            animate();
+
+            function animate() {
+                // spin rate
+                sphere.rotation.x -= ((spinrate * 360) / (60 * 60) * Math.PI) / 180;
+                renderer.render(scene, camera);
+                requestAnimationFrame(animate);
+            }
+        }       
+    </script>
+</head>
+
+<body>
+    <div>
+        <input type="number" id="spindir" placeholder="Spin Dir" />
+        <input type="number" id="grip" placeholder="Grip" />
+        <input type="number" id="spinrate" placeholder="Spin Rate" />
+        <input type="button" value="Render Ball!" onclick="handleOnClick()" />
+    </div>
+    <div>
+        <canvas id="pitch" />
+    </div>
+</body>
+
+</html>
