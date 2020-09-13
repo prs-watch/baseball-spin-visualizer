@@ -7,10 +7,10 @@
         // initialize.
         window.addEventListener('load', init);
         function init() {
-            renderSpin(0, 0, 10);
+            renderSpin(0, 0, 0);
         }
 
-        // fire when button is clicked.
+        // fire render function when button is clicked.
         function handleOnClick() {
             const spindir = document.getElementById("spindir").value;
             const grip = document.getElementById("grip").value;
@@ -24,7 +24,8 @@
             const height = 397;
 
             const renderer = new THREE.WebGLRenderer({
-                canvas: document.querySelector('#pitch')
+                canvas: document.querySelector('#pitch'),
+                alpha: true
             });
             renderer.setPixelRatio(window.devicePixelRatio);
             renderer.setSize(width, height);
@@ -65,17 +66,33 @@
             }
         }       
     </script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.4.1/milligram.css">
 </head>
 
-<body>
-    <div>
-        <input type="number" id="spindir" placeholder="Spin Dir" />
-        <input type="number" id="grip" placeholder="Grip" />
-        <input type="number" id="spinrate" placeholder="Spin Rate" />
-        <input type="button" value="Render Ball!" onclick="handleOnClick()" />
+<body style="margin: 2em;">
+    <div class="header" style="text-align: center;">
+        <h1>Spin Simulator</h1>
     </div>
-    <div>
-        <canvas id="pitch" />
+    <div class="main">
+        <div class="row" style="margin-bottom: 2em;">
+            <div class="column">
+                <input type="number" id="spindir" placeholder="Spin Dir" />
+            </div>
+            <div class="column">
+                <input type="number" id="grip" placeholder="Grip" />
+            </div>
+            <div class="column">
+                <input type="number" id="spinrate" placeholder="Spin Rate" />
+            </div>
+            <div class="column">
+                <input type="button" value="Render Ball!" onclick="handleOnClick()" />
+            </div>
+        </div>
+        <div style="text-align: center;">
+            <canvas id="pitch" />
+        </div>
     </div>
 </body>
 
